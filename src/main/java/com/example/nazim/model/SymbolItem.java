@@ -11,18 +11,18 @@ import lombok.*;
 @ToString
 @Setter
 public class SymbolItem {
-    @JsonProperty("currency")
+    @JsonProperty("Code")
+    private String code;
+    @JsonProperty("Name")
+    private String name;
+    @JsonProperty("Country")
+    private String country;
+    @JsonProperty("Exchange")
+    private String exchange;
+    @JsonProperty("Currency")
     private String currency;
-    @JsonProperty("description")
-    private String desc;
-    @JsonProperty("displaySymbol")
-    private String displaySym;
-    @JsonProperty("figi")
-    private String figi;
-    @JsonProperty("mic")
-    private String mic;
-    @JsonProperty("symbol")
-    private String symbol;
-    @JsonProperty("type")
+    @JsonProperty("Type")
     private String type;
+    @JsonProperty("Isin")
+    private String isin;
 }

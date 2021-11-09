@@ -19,6 +19,8 @@ public class ApplicationProperties {
 
 	@Value("${api.token}")
 	private String apiToken;
-	@Value("${symbol.source.url}")
-	private String symbolUrl;
+	@Value("${eod.path}")
+	private String eodPath;
+	@Value("${symbol.path}")
+	private String symPath;
 }

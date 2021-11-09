@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import com.example.nazim.Exceptions.BadRequestException;
 import com.example.nazim.Exceptions.ForbiddenException;
 import com.example.nazim.model.SymbolItem;
+import lombok.Getter;
 import org.springframework.aop.framework.autoproxy.BeanFactoryAdvisorRetrievalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +36,9 @@ public class StockService {
 
     private String PERIOD = "d";
 
+    // @Getter
+    private ArrayList<String> symbol_list = new ArrayList<String>();
+
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -44,35 +48,34 @@ public class StockService {
 
     @Autowired
     public StockService(ApplicationProperties applicationProperties) {
-
         this.applicationProperties = applicationProperties;
-
     }
 
     protected HttpHeaders createHttpHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-
         return httpHeaders;
     }
 
     public ArrayList<Stock> getEODStocks(String symbol) throws Exception {
+
         LocalDateTime nowDate = LocalDateTime.now();
         String date_to = nowDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDateTime fromDate = nowDate.minusYears(1);
+        //LocalDateTime fromDate = nowDate.minusDays(30);
         String date_from = fromDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        log.info("nowDate" + nowDate.toString());
+
         ArrayList<Stock> stockList = new ArrayList<Stock>();
-        log.info("EOD Stocks");
-        String url = applicationProperties.getDataUrl() + "/" + symbol.toUpperCase() + ".US?from=" + date_from + "&to="
-                + date_to + "&api_token=" + applicationProperties.getApiToken() + "&period=" + PERIOD + "&fmt=json";
+
+        String url = applicationProperties.getDataUrl() + applicationProperties.getEodPath() + symbol.toUpperCase() + ".US?from="
+                + date_from + "&to=" + date_to + "&api_token=" + applicationProperties.getApiToken() + "&period=" + PERIOD + "&fmt=json";
         HttpEntity<String> request = new HttpEntity<>(createHttpHeaders());
 
         ResponseEntity<EndOfDayStockItem[]> response = this.restTemplate().exchange(url, HttpMethod.GET, request,
                 EndOfDayStockItem[].class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("response modeling" + (response.getBody() != null ? response.getBody().length : 0));
+            log.info("response modeling " + (response.getBody() != null ? response.getBody().length : 0));
             for (EndOfDayStockItem item : response.getBody()) {
                 Stock stock = new Stock();
                 LocalDate date = LocalDate.parse(item.getDate());
@@ -86,21 +89,25 @@ public class StockService {
         } else {
             throw new Exception("Error happened on EODHistorical service status code : " + response.getStatusCode());
         }
-
-
     }
 
     public ArrayList<String> getStockSymbols() throws Exception {
         HttpEntity<String> request = new HttpEntity<>(createHttpHeaders());
-        ArrayList<String> responseArray = new ArrayList<String>();
-        ResponseEntity<SymbolItem[]> response = this.restTemplate().exchange(applicationProperties.getSymbolUrl(), HttpMethod.GET, request,
+
+        String symbol_url = applicationProperties.getDataUrl() + applicationProperties.getSymPath() + "US?api_token="
+                + applicationProperties.getApiToken() + "&fmt=json";
+        log.info("symbol url: " + symbol_url);
+        ResponseEntity<SymbolItem[]> response = this.restTemplate().exchange(symbol_url, HttpMethod.GET, request,
                 SymbolItem[].class);
         if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("symbol count" + response.getBody().length);
+
             for (SymbolItem item : response.getBody()) {
-                responseArray.add(item.getSymbol());
+                if (item.getType().equals("Common Stock")) {
+                    symbol_list.add(item.getCode());
+                }
             }
-            return responseArray;
+            log.info("symbol count " + symbol_list.size());
+            return symbol_list;
         } else {
             throw new Exception("Error happened on Symbol service status code : " + response.getStatusCode());
         }
