@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-//@JsonInclude(JsonInclude.Include.NON_NULL) // Ignore null parameters
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,9 +17,9 @@ import lombok.ToString;
 @Setter
 public class Stock {
 
-	@JsonProperty("price")
-	private float adjPrice;
-	@JsonProperty("timestamp")
-	private long date;
+    @JsonProperty("price")
+    private float adjPrice;
+    @JsonProperty("timestamp")
+    private long date;
 
 }

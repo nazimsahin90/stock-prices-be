@@ -17,18 +17,19 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EndOfDayStockItem {
 
-	@JsonProperty("date")
-	String date;
-	@JsonProperty("open")
-	float open;
-	@JsonProperty("high")
-	float high;
-	@JsonProperty("low")
-	float low;
-	@JsonProperty("close")
-	float close;
-	@JsonProperty("volume")
-	long volume;
-	@JsonProperty("adjusted_close")
-	float adjPrice;
+    @JsonProperty("date")
+    String date;
+    @JsonProperty("open")
+    float open;
+    @JsonProperty("high")
+    float high;
+    @JsonProperty("low")
+    float low;
+    @JsonProperty("close")
+    float close;
+    @JsonProperty("volume")
+    long volume;
+    @JsonProperty("adjusted_close")
+    float adjPrice;
+
 }

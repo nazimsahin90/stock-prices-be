@@ -11,6 +11,7 @@ import lombok.*;
 @ToString
 @Setter
 public class SymbolItem {
+
     @JsonProperty("Code")
     private String code;
     @JsonProperty("Name")
@@ -25,4 +26,5 @@ public class SymbolItem {
     private String type;
     @JsonProperty("Isin")
     private String isin;
+
 }

@@ -6,11 +6,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import com.example.nazim.Exceptions.BadRequestException;
-import com.example.nazim.Exceptions.ForbiddenException;
 import com.example.nazim.model.SymbolItem;
-import lombok.Getter;
-import org.springframework.aop.framework.autoproxy.BeanFactoryAdvisorRetrievalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
@@ -20,8 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.nazim.config.ApplicationProperties;
@@ -34,10 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StockService {
 
-    private String PERIOD = "d";
-
-    // @Getter
-    private ArrayList<String> symbol_list = new ArrayList<String>();
+    private static final String PERIOD = "d";
+    private final ArrayList<String> symbol_list = new ArrayList<String>();
 
     @Bean
     public RestTemplate restTemplate() {
@@ -65,7 +57,7 @@ public class StockService {
         //LocalDateTime fromDate = nowDate.minusDays(30);
         String date_from = fromDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        ArrayList<Stock> stockList = new ArrayList<Stock>();
+        ArrayList<Stock> stockList = new ArrayList<>();
 
         String url = applicationProperties.getDataUrl() + applicationProperties.getEodPath() + symbol.toUpperCase() + ".US?from="
                 + date_from + "&to=" + date_to + "&api_token=" + applicationProperties.getApiToken() + "&period=" + PERIOD + "&fmt=json";

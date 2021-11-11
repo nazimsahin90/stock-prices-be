@@ -1,11 +1,9 @@
 package com.example.nazim.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +25,7 @@ public class StockController {
     }
 
     @GetMapping("/stocks/{symbol}")
-    public ArrayList<Stock> getStocks(@PathVariable @NotNull String symbol) throws Exception, IOException {
+    public ArrayList<Stock> getStocks(@PathVariable @NotNull String symbol) throws Exception {
         return stockService.getEODStocks(symbol);
     }
 
